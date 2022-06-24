@@ -1,0 +1,86 @@
+<div class="book-summary">
+    <nav role="navigation">
+        <div id="book-search-input" role="search">
+            <input type="text" placeholder="Type to search" />
+        </div>
+        <div id="book-search-input-link" role="search">
+            <a href="{{site.baseurl}}/search">Click to Search</a>
+        </div>
+        <ul class="summary">
+            {% if page.url == "/index.html" or page.url == "/" %}
+            <li class="chapter active" data-level="1.1" data-path="{{site.baseurl}}">
+            {% else %}
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}">
+            {% endif %}
+                <a href="{{site.baseurl}}/">
+                    {{ site.title | escape }}
+                </a>
+            </li>
+
+            <li class="divider"></li>
+
+            {% for collection in site.collections %}
+                <!-- <p>{{ collection.label }}</p> -->
+                {% if collection.label != 'posts' %}
+                    {% if collection.output %}
+                        {% assign reversed_posts = site[collection.label] %}
+
+                        {% for post in reversed_posts %}
+                            {% if page.url == post.url %}
+                            <li class="chapter active" data-level="1.2" data-path="{{site.baseurl}}{{post.url}}">
+                            {% else %}
+                            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                            {% endif %}
+                                <a href="{{site.baseurl}}{{post.url}}">
+                                    {{ post.title | escape }}
+                                </a>
+                                {% if site.toc.enabled %}
+                                    {% if page.url == post.url %}
+                                        {% include toc.html html=content h_min=site.toc.h_min h_max=site.toc.h_max %}
+                                    {% endif %}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+
+                        <li class="divider"></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% for category in site.categories %}
+            <!-- <p>{{ category[0] }}</p> -->
+                {% assign reversed_posts = category[1] %}
+
+                {% if category[0] == 'Rank' %}
+                    {% assign item_limit = 10000 %}
+                {% else %}
+                    {% assign item_limit = 1 %}
+                {% endif %}
+
+                {% for post in reversed_posts limit:item_limit %}
+                    {% if page.url == post.url %}
+                    <li class="chapter active" data-level="1.2" data-path="{{site.baseurl}}{{post.url}}">
+                    {% else %}
+                    <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                    {% endif %}
+                        <a href="{{site.baseurl}}{{post.url}}">
+                            {{ post.title | escape }}
+                        </a>
+                        {% if site.toc.enabled %}
+                            {% if page.url == post.url %}
+                                {% include toc.html html=content h_min=site.toc.h_min h_max=site.toc.h_max %}
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+
+                <li class="divider"></li>
+            {% endfor %}
+        <!--<li>
+                <a href="https://github.com/sighingnow/jekyll-gitbook/fork" target="blank" class="gitbook-link">
+                    Fork it Now!
+                </a>
+            </li>
+        -->
+        </ul>
+    </nav>
+</div>
